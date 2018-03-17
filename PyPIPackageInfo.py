@@ -70,7 +70,7 @@ body {
 WRAPPER_CLASS = 'pypi-package-info'
 MESSAGE_KEY = 'pypi_package_info'
 MESSAGE_TTL = 4000
-LENGTH_DESC = 100
+LENGTH_SUMMARY = 400
 SETTINGS_KEY = 'PyPIPackageInfo.sublime-settings'
 CACHE_MAX_COUNT_DEFAULT = 1000
 
@@ -159,7 +159,7 @@ class PyPIPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     def _extract_package_info(self, data):
         try:
             info = data['info']
-            summary = self._truncate(info['summary'], LENGTH_DESC)
+            summary = self._truncate(info['summary'], LENGTH_SUMMARY)
             return {
                 'name': info['name'],
                 'summary': summary,
