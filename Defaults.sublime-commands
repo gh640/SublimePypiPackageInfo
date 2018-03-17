@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "PyPIPackageInfo: Clear all cache",
+        "command": "pypi_package_info_clear_all_cache",
+    }
+]
