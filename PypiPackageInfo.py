@@ -75,7 +75,7 @@ SETTINGS_KEY = 'PyPIPackageInfo.sublime-settings'
 CACHE_MAX_COUNT_DEFAULT = 1000
 
 
-class PyPIPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
+class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     '''A view event listener for showing PyPI package data.'''
 
     def on_hover(self, point, hover_zone):
