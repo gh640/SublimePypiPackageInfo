@@ -2,7 +2,7 @@
 
 A Sublime Text 3 package which provides a popup for Python PyPI packages in Pipfile.
 
-[capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
+![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
 
 ## Requirements
 
@@ -37,7 +37,7 @@ Select `TOML` as a syntax for all `Pipfile`s.
 
 ## Usage
 
-[capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.gif)
+![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.gif)
 
 Hover the cursor on a package name in your `Pipfile` and the package information is fetched and shown in a popup window.
 
