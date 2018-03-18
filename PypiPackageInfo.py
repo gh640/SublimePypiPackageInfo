@@ -244,7 +244,9 @@ class PackageCache:
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM packages WHERE name=?', (name, ))
         package = cur.fetchone()
-        cur.execute('UPDATE packages SET updated_at=? WHERE name=?', (get_now(), name))
+        cur.execute(
+            'UPDATE packages SET updated_at=? WHERE name=?', (get_now(), name)
+        )
         self.conn.commit()
 
         cache_max_count = self._get_cache_max_count()
@@ -252,9 +254,15 @@ class PackageCache:
             cur.execute('SELECT count(*) FROM packages')
             count = cur.fetchone()[0]
             if count > cache_max_count:
-                cur.execute('''DELETE FROM packages WHERE name NOT IN (
-                    SELECT name FROM packages ORDER BY updated_at DESC LIMIT ?
-                )''', (cache_max_count, ))
+                cur.execute(
+                    '''
+                    DELETE FROM packages WHERE name NOT IN (
+                        SELECT name FROM packages
+                            ORDER BY updated_at DESC LIMIT ?
+                    )
+                    ''',
+                    (cache_max_count, )
+                )
                 self.conn.commit()
         cur.close()
 
@@ -282,7 +290,12 @@ class PackageCache:
         return cache_manager.get_path('cache.sqlite3')
 
     def _create_table_if_not_exists(self):
-        self.conn.execute('CREATE TABLE IF NOT EXISTS packages (name text, data blob, updated_at integer)')
+        self.conn.execute(
+            '''
+            CREATE TABLE IF NOT EXISTS packages
+                (name text, data blob, updated_at integer)
+            '''
+        )
 
     def _get_cache_max_count(self):
         settings = sublime.load_settings(SETTINGS_KEY)
