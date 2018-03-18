@@ -106,8 +106,10 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
             show_status_message(self.view, 'PyPI package data is found.')
 
     def on_popup_navigate(self, href):
-        if href.startswith('https://') or href.startswith('http://'):
-            webbrowser.open_new_tab(href)
+        for url_prefix in ('https://', 'http://'):
+            if href.startswith(url_prefix):
+                webbrowser.open_new_tab(href)
+                break
 
         mdpopups.hide_popup(self.view)
 
