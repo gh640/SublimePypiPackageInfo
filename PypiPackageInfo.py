@@ -99,6 +99,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
             data_raw = self._fetch_package_info(package_name)
             data = self._extract_package_info(data_raw)
         except BaseException as e:
+            show_status_message(self.view, str(e))
             raise e
         else:
             self._show_popup(data, point)
@@ -218,7 +219,7 @@ class PackageDataManager:
 
     def _fetch_data(self, name):
         response = requests.get(URL_JSON.format(name=name))
-        if response.status_code != 200:
+        if not response.ok:
             raise BaseException(
                 'Package data fetch failed for "{}".'.format(name)
             )
