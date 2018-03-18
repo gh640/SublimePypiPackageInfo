@@ -1,1 +1,1 @@
-# SublimePyPIPackageInfo
+# SublimePypiPackageInfo
