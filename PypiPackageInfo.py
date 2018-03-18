@@ -170,7 +170,9 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
                 'btn_close': chr(0x00D7),
             }
         except Exception as e:
-            raise BaseException('Package data extraction failed.')
+            raise BaseException(
+                'Package data extraction failed for "{}".'.format(data)
+            )
 
     def _show_popup(self, data, location):
         if mdpopups.is_popup_visible(self.view):
@@ -217,7 +219,9 @@ class PackageDataManager:
     def _fetch_data(self, name):
         response = requests.get(URL_JSON.format(name=name))
         if response.status_code != 200:
-            raise BaseException('Package data fetch failed.')
+            raise BaseException(
+                'Package data fetch failed for "{}".'.format(name)
+            )
         return response.json()
 
 
