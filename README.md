@@ -4,7 +4,8 @@ A Sublime Text 3 package which provides a popup for Python PyPI packages in Pipf
 
 ## Requirements
 
-...
+- [TOML](https://packagecontrol.io/packages/TOML): A Sublime Text package for TOML syntax.
+    - `PypiPackageInfo` uses TOML syntax to detect if the pointed scope is a package name.
 
 ## Installation
 
@@ -18,7 +19,7 @@ Currently only `Pipfile` files are supported and no other formats like `requirem
 
 ## Link
 
-- [`ComposerPackageInfo`](https://packagecontrol.io/packages/ComposerPackageInfo):  `PypiPackageInfo` uses the same logic as one `ComposerPackageInfo` uses.
+- [`ComposerPackageInfo`](https://packagecontrol.io/packages/ComposerPackageInfo): `PypiPackageInfo` uses the same logic as one `ComposerPackageInfo` uses.
 
 ## License
 
