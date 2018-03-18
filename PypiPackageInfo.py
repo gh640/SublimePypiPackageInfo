@@ -6,10 +6,11 @@ from datetime import datetime
 import json
 import os
 import os.path
-import re
 import sqlite3
 import webbrowser
+
 import requests
+
 import sublime
 import sublime_plugin
 import mdpopups
