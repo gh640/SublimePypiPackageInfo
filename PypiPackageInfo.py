@@ -72,7 +72,7 @@ WRAPPER_CLASS = 'pypi-package-info'
 MESSAGE_KEY = 'pypi_package_info'
 MESSAGE_TTL = 4000
 LENGTH_SUMMARY = 400
-SETTINGS_KEY = 'PyPIPackageInfo.sublime-settings'
+SETTINGS_KEY = 'PypiPackageInfo.sublime-settings'
 CACHE_MAX_COUNT_DEFAULT = 1000
 
 
