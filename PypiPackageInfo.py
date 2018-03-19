@@ -243,7 +243,7 @@ class PackageCache:
         self.conn.row_factory = sqlite3.Row
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM packages WHERE name=?', (name, ))
-        package = cur.fetchone()
+        row = cur.fetchone()
         cur.execute(
             'UPDATE packages SET updated_at=? WHERE name=?', (get_now(), name)
         )
@@ -266,8 +266,8 @@ class PackageCache:
                 self.conn.commit()
         cur.close()
 
-        if package:
-            data = package['data']
+        if row:
+            data = row['data']
             return json.loads(data)
 
         return False
