@@ -46,6 +46,7 @@ Currently only `Pipfile` files are supported and no other formats like `requirem
 ## Links
 
 - [`ComposerPackageInfo`](https://packagecontrol.io/packages/ComposerPackageInfo): `PypiPackageInfo` uses the same logic as one `ComposerPackageInfo` uses.
+- [`pipenv-sublime`](https://github.com/kennethreitz/pipenv-sublime): A Sublime Text pugin for handling projects with Pipenv.
 
 ## License
 
