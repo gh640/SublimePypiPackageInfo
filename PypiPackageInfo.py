@@ -303,6 +303,12 @@ class PackageCache:
         try:
             return int(max_count)
         except ValueError as e:
+            print(
+                '`cache_max_count` must be an integer. '
+                'The value is set to "{}". '
+                'The default value {} is used instead.'
+                .format(max_count, CACHE_MAX_COUNT_DEFAULT)
+            )
             return CACHE_MAX_COUNT_DEFAULT
 
 
