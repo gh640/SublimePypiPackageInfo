@@ -1,0 +1,32 @@
+[
+  {
+    "caption": "Preferences",
+    "mnemonic": "n",
+    "id": "preferences",
+    "children":
+    [
+      {
+        "caption": "Package Settings",
+        "mnemonic": "P",
+        "id": "package-settings",
+        "children":
+        [
+          {
+            "caption": "PypiPackageInfo",
+            "children":
+            [
+              {
+                "caption": "Settings",
+                "command": "edit_settings",
+                "args": {
+                  "base_file": "${packages}/PypiPackageInfo/PypiPackageInfo.sublime-settings",
+                  "default": "{\n  \"cache_max_count\": 1000\n}"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
