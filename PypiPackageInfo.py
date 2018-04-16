@@ -98,7 +98,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
         try:
             data_raw = self._fetch_package_info(package_name)
             data = self._extract_package_info(data_raw)
-        except BaseException as e:
+        except CustomBaseException as e:
             show_status_message(self.view, str(e))
             raise e
         else:
@@ -173,7 +173,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
                 'btn_close': chr(0x00D7),
             }
         except Exception as e:
-            raise BaseException(
+            raise CustomBaseException(
                 'Package data extraction failed for "{}".'.format(data)
             )
 
@@ -222,7 +222,7 @@ class PackageDataManager:
     def _fetch_data(self, name):
         response = requests.get(URL_JSON.format(name=name))
         if not response.ok:
-            raise BaseException(
+            raise CustomBaseException(
                 'Package data fetch failed for "{}".'.format(name)
             )
         return response.json()
@@ -338,6 +338,6 @@ def get_now():
     return int(datetime.now().timestamp())
 
 
-class BaseException(Exception):
+class CustomBaseException(Exception):
     '''Base exception class for this package.'''
     pass
