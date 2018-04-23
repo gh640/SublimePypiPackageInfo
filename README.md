@@ -13,7 +13,7 @@ A Sublime Text 3 package which provides a popup for Python PyPI packages in Pipf
 
 ## Installation
 
-Install the pacakge.
+Install the package.
 
 1. Install [Package Control](https://packagecontrol.io/installation) to your Sublime Text 3.
 2. Open the command palette and select `Package Controll: Install Package`.
@@ -40,7 +40,7 @@ Select `TOML` as a syntax for all `Pipfile`s.
 
 ## Usage
 
-### Displaying pacakge information popup
+### Displaying package information popup
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.gif)
 
@@ -63,7 +63,7 @@ There are following setting options.
 - `cache_max_count`
 
 `cache_max_count`
-:    (default: `1000`) Max number of locally cached package data. If the number of cached pacakge data gets greater than this value, old tuples are deleted from the database table.
+:    (default: `1000`) Max number of locally cached package data. If the number of cached package data gets greater than this value, old tuples are deleted from the database table.
 
 You can edit the setting file via Menu → Preferences → Package Settings → PypiPackageInfo → Settings .
 
