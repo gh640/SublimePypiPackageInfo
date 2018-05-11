@@ -16,8 +16,8 @@ import sublime_plugin
 import mdpopups
 
 
-URL_JSON = 'https://pypi.python.org/pypi/{name}/json'
-URL_PAGE = 'https://pypi.python.org/pypi/{name}'
+URL_JSON = 'https://pypi.org/pypi/{name}/json'
+URL_PAGE = 'https://pypi.org/pypi/{name}'
 TEMPLATE = '''
 # {name}
 
