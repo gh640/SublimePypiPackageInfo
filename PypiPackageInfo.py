@@ -243,14 +243,31 @@ class PackageCache:
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM packages WHERE name=?', (name, ))
         row = cur.fetchone()
-        cur.execute(
-            'UPDATE packages SET updated_at=? WHERE name=?', (get_now(), name)
-        )
-        self.conn.commit()
+        if row:
+            cur.execute(
+                'UPDATE packages SET updated_at=? WHERE name=?',
+                (get_now(), name),
+            )
+            self.conn.commit()
+            cur.close()
+            data = row['data']
+            return json.loads(data)
 
+        return False
+
+    def add_package_data(self, name, data):
+        row = (name, json.dumps(data), get_now())
+        cur = self.conn.cursor()
+        cur.execute('INSERT INTO packages VALUES (?, ?, ?)', row)
+        self.conn.commit()
+        cur.close()
+        self.clear_old_cache()
+
+    def clear_old_cache(self):
         cache_max_count = self._get_cache_max_count()
         if cache_max_count > 0:
-            cur.execute('SELECT count(*) FROM packages')
+            cur = self.conn.cursor()
+            cur.execute('SELECT COUNT(*) FROM packages')
             count = cur.fetchone()[0]
             if count > cache_max_count:
                 cur.execute(
@@ -263,20 +280,7 @@ class PackageCache:
                     (cache_max_count, )
                 )
                 self.conn.commit()
-        cur.close()
-
-        if row:
-            data = row['data']
-            return json.loads(data)
-
-        return False
-
-    def add_package_data(self, name, data):
-        row = (name, json.dumps(data), get_now())
-        cur = self.conn.cursor()
-        cur.execute('INSERT INTO packages VALUES (?, ?, ?)', row)
-        self.conn.commit()
-        cur.close()
+            cur.close()
 
     def clear_all_cache(self):
         if self.conn:
