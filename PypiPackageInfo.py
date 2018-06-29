@@ -125,7 +125,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     def _is_in_scope(self, point):
         scope_name = self.view.scope_name(point)
         names = [
-            'keyword.key.toml',
+            'entity.name.tag.toml',
         ]
         return all(n in scope_name for n in names)
 
