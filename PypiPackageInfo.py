@@ -124,17 +124,12 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
     def _is_in_scope(self, point):
         scope_name = self.view.scope_name(point)
-        names = [
-            'entity.name.tag.toml',
-        ]
+        names = ['entity.name.tag.toml']
         return all(n in scope_name for n in names)
 
     def _is_in_packages_table(self, point):
-        packages_table_res = (
-            '^\[packages\]$',
-            '^\[dev-packages\]$',
-        )
-        table_re = '^\[.+\]$'
+        packages_table_res = (r'^\[packages\]$', r'^\[dev-packages\]$')
+        table_re = r'^\[.+\]$'
         for package_table_re in packages_table_res:
             package_table = self.view.find(package_table_re, 0)
             if not package_table:
@@ -180,19 +175,21 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
         if mdpopups.is_popup_visible(self.view):
             mdpopups.hide_popup(self.view)
 
-        mdpopups.show_popup(self.view,
-                            TEMPLATE.format(**data),
-                            css=CSS,
-                            wrapper_class=WRAPPER_CLASS,
-                            max_width=400,
-                            location=location,
-                            flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
-                            on_navigate=self.on_popup_navigate)
+        mdpopups.show_popup(
+            self.view,
+            TEMPLATE.format(**data),
+            css=CSS,
+            wrapper_class=WRAPPER_CLASS,
+            max_width=400,
+            location=location,
+            flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
+            on_navigate=self.on_popup_navigate,
+        )
 
     def _truncate(self, string, count):
         ellipsis = '...'
         if len(string) > count:
-            return string[:count - len(ellipsis)] + ellipsis
+            return string[: count - len(ellipsis)] + ellipsis
         else:
             return string
 
@@ -241,12 +238,11 @@ class PackageCache:
     def get_package_data(self, name):
         self.conn.row_factory = sqlite3.Row
         cur = self.conn.cursor()
-        cur.execute('SELECT * FROM packages WHERE name=?', (name, ))
+        cur.execute('SELECT * FROM packages WHERE name=?', (name,))
         row = cur.fetchone()
         if row:
             cur.execute(
-                'UPDATE packages SET updated_at=? WHERE name=?',
-                (get_now(), name),
+                'UPDATE packages SET updated_at=? WHERE name=?', (get_now(), name)
             )
             self.conn.commit()
             cur.close()
@@ -277,7 +273,7 @@ class PackageCache:
                             ORDER BY updated_at DESC LIMIT ?
                     )
                     ''',
-                    (cache_max_count, )
+                    (cache_max_count,),
                 )
                 self.conn.commit()
             cur.close()
@@ -309,8 +305,9 @@ class PackageCache:
             print(
                 '`cache_max_count` must be an integer. '
                 'The value is set to "{}". '
-                'The default value {} is used instead.'
-                .format(max_count, CACHE_MAX_COUNT_DEFAULT)
+                'The default value {} is used instead.'.format(
+                    max_count, CACHE_MAX_COUNT_DEFAULT
+                )
             )
             return CACHE_MAX_COUNT_DEFAULT
 
@@ -343,4 +340,5 @@ def get_now():
 
 class CustomBaseException(Exception):
     '''Base exception class for this package.'''
+
     pass
