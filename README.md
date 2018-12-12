@@ -1,6 +1,6 @@
 # PypiPackageInfo
 
-A Sublime Text 3 package which provides a popup for Python PyPI packages in Pipfile.
+A Sublime Text 3 package which provides a popup for Python PyPI packages in `pyproject.toml`/`Pipfile`.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
 
@@ -44,9 +44,9 @@ Select `TOML` as a syntax for all `Pipfile`s.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.gif)
 
-Hover the cursor on a package name in your `Pipfile` and the package information is fetched and shown in a popup window.
+Hover the cursor on a package name in your `pyproject.toml`/`Pipfile` and the package information is fetched and shown in a popup window.
 
-Currently only `Pipfile` files are supported and no other formats like `requirements.txt` are supported.
+Currently only `pyproject.toml`/`Pipfile` files are supported and no other formats like `requirements.txt` are supported.
 
 ### Clearing local cache
 
@@ -72,6 +72,7 @@ You can edit the setting file via Menu → Preferences → Package Settings → 
 
 - [`ComposerPackageInfo`](https://packagecontrol.io/packages/ComposerPackageInfo): `PypiPackageInfo` uses the same logic as one `ComposerPackageInfo` uses.
 - [`pipenv-sublime`](https://github.com/kennethreitz/pipenv-sublime): A Sublime Text pugin for handling projects with Pipenv.
+- [Poetry: Dependency Management for Python](https://github.com/sdispater/poetry)
 
 
 ## License
