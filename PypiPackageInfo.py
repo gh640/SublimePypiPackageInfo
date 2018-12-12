@@ -79,7 +79,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     '''A view event listener for showing PyPI package data.'''
 
     def on_hover(self, point, hover_zone):
-        if not self._is_pipfile():
+        if not self._is_target_file():
             return
 
         if not self._is_on_text(hover_zone):
@@ -112,8 +112,8 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
         mdpopups.hide_popup(self.view)
 
-    def _is_pipfile(self):
-        return self._get_basename() == 'Pipfile'
+    def _is_target_file(self):
+        return self._get_basename() in ('pyproject.toml', 'Pipfile')
 
     def _get_basename(self):
         file_name = self.view.file_name()
@@ -128,7 +128,14 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
         return all(n in scope_name for n in names)
 
     def _is_in_packages_table(self, point):
-        packages_table_res = (r'^\[packages\]$', r'^\[dev-packages\]$')
+        packages_table_res = (
+            # For `pyproject.toml` (Poerty).
+            r'\[tool\.poetry\.dependencies\]',
+            r'\[tool\.poetry\.dev-dependencies\]',
+            # For `Pipenv`.
+            r'^\[packages\]$',
+            r'^\[dev-packages\]$',
+        )
         table_re = r'^\[.+\]$'
         for package_table_re in packages_table_res:
             package_table = self.view.find(package_table_re, 0)
