@@ -2,12 +2,13 @@
 
 '''Provides a popup for Python PyPI packages.'''
 
-from datetime import datetime
 import json
 import os
 import os.path
 import sqlite3
 import webbrowser
+from abc import ABCMeta, abstractmethod
+from datetime import datetime
 
 import requests
 
@@ -75,10 +76,29 @@ SETTINGS_KEY = 'PypiPackageInfo.sublime-settings'
 CACHE_MAX_COUNT_DEFAULT = 1000
 
 
-class TomlFormat:
+class FileFormat(metaclass=ABCMeta):
+    '''Abstract class for file handler.'''
+
+    @classmethod
+    @abstractmethod
+    def is_supported_file(cls, basename):
+        pass
+
+    @abstractmethod
+    def is_focused(self, view, point):
+        pass
+
+    @abstractmethod
+    def package_name(self, view, point):
+        pass
+
+
+class TomlFormat(FileFormat):
     '''Toml format handler.'''
 
-    basenames = ('pyproject.toml', 'Pipfile')
+    @classmethod
+    def is_supported_file(cls, basename):
+        return basename in ('pyproject.toml', 'Pipfile')
 
     def is_focused(self, view, point):
         return self._is_in_scope(view, point) and self._is_in_packages_table(
@@ -122,10 +142,12 @@ class TomlFormat:
         return package_name.strip('"')
 
 
-class RequirementsFormat:
+class RequirementsFormat(FileFormat):
     '''requirements.txt format handler.'''
 
-    basenames = ('requirements.txt',)
+    @classmethod
+    def is_supported_file(cls, basename):
+        return basename in ('requirements.txt',)
 
     def is_focused(self, view, point):
         return self._is_in_scope(view, point)
@@ -136,6 +158,8 @@ class RequirementsFormat:
         return all(n in scope_name for n in names)
 
     def package_name(self, view, point):
+        # view.extract_scope() cannot be used here as it extracts too broad
+        # region.
         region = view.expand_by_class(
             point, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END
         )
@@ -181,7 +205,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
     def _gen_format(self):
         for klass in self.formats:
-            if self._get_basename() in klass.basenames:
+            if klass.is_supported_file(self._get_basename()):
                 return klass()
         return None
 
