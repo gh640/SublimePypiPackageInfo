@@ -1,13 +1,14 @@
 # PypiPackageInfo
 
-A Sublime Text 3 package which provides a popup for Python PyPI packages in `pyproject.toml`/`Pipfile`.
+A Sublime Text 3 package which provides a popup for Python PyPI packages in `requirements.txt`/`pyproject.toml`/`Pipfile`.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
 
-## Supported files
+## Supported formats
 
-The following files are supported.
+The following formats are supported.
 
+- `requirements.txt`
 - `pyproject.toml` (Poetry)
 - `Pipfile` (Pipenv)
 
@@ -20,7 +21,7 @@ The following files are supported.
 
 Install the package.
 
-1. Install [Package Control](https://packagecontrol.io/installation) to your Sublime Text 3.
+1. Install [Package Control](https://packagecontrol.io/installation) to your Sublime Text 3 if you haven't.
 2. Open the command palette and select `Package Controll: Install Package`.
 3. Search for and select `PypiPackageInfo`.
 
@@ -48,9 +49,7 @@ Select `TOML` as a syntax for all `Pipfile`s.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.gif)
 
-Hover the cursor on a package name in your `pyproject.toml`/`Pipfile` and the package information is fetched and shown in a popup window.
-
-Currently only `pyproject.toml`/`Pipfile` files are supported and no other formats like `requirements.txt` are supported.
+Hover the cursor on a package name in your `requirements.txt`/`pyproject.toml`/`Pipfile` and the package information is fetched and shown in a popup window.
 
 ### Clearing local cache
 
