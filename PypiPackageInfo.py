@@ -75,23 +75,90 @@ SETTINGS_KEY = 'PypiPackageInfo.sublime-settings'
 CACHE_MAX_COUNT_DEFAULT = 1000
 
 
+class TomlFormat:
+    '''Toml format handler.'''
+
+    basenames = ('pyproject.toml', 'Pipfile')
+
+    def is_focused(self, view, point):
+        return self._is_in_scope(view, point) and self._is_in_packages_table(
+            view, point
+        )
+
+    def _is_in_scope(self, view, point):
+        scope_name = view.scope_name(point)
+        names = ['entity.name.tag.toml']
+        return all(n in scope_name for n in names)
+
+    def _is_in_packages_table(self, view, point):
+        packages_table_res = (
+            # For `pyproject.toml` (Poerty).
+            r'\[tool\.poetry\.dependencies\]',
+            r'\[tool\.poetry\.dev-dependencies\]',
+            # For `Pipenv`.
+            r'^\[packages\]$',
+            r'^\[dev-packages\]$',
+        )
+        table_re = r'^\[.+\]$'
+        for package_table_re in packages_table_res:
+            package_table = view.find(package_table_re, 0)
+            if not package_table:
+                continue
+
+            region_begin = package_table.end()
+            next_table = view.find(table_re, region_begin)
+            if next_table:
+                region_end = next_table.begin()
+            else:
+                region_end = view.size()
+
+            if sublime.Region(region_begin, region_end).contains(point):
+                return True
+
+        return False
+
+    def package_name(self, view, point):
+        package_name = view.substr(view.extract_scope(point))
+        return package_name.strip('"')
+
+
+class RequirementsFormat:
+    '''requirements.txt format handler.'''
+
+    basenames = ('requirements.txt',)
+
+    def is_focused(self, view, point):
+        return self._is_in_scope(view, point)
+
+    def _is_in_scope(self, view, point):
+        scope_name = view.scope_name(point)
+        names = ['source.requirementstxt', 'string.package_name.requirementstxt']
+        return all(n in scope_name for n in names)
+
+    def package_name(self, view, point):
+        region = view.expand_by_class(
+            point, sublime.CLASS_WORD_START | sublime.CLASS_WORD_END
+        )
+        return view.substr(region)
+
+
 class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     '''A view event listener for showing PyPI package data.'''
 
+    formats = (TomlFormat, RequirementsFormat)
+
     def on_hover(self, point, hover_zone):
-        if not self._is_target_file():
+        format_ = self._gen_format()
+        if not format_:
             return
 
         if not self._is_on_text(hover_zone):
             return
 
-        if not self._is_in_scope(point):
+        if not format_.is_focused(self.view, point):
             return
 
-        if not self._is_in_packages_table(point):
-            return
-
-        package_name = self._get_selected_pacakge_name(point)
+        package_name = format_.package_name(self.view, point)
 
         show_status_message(self.view, 'Searching PyPI package data...')
         try:
@@ -112,8 +179,11 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
         mdpopups.hide_popup(self.view)
 
-    def _is_target_file(self):
-        return self._get_basename() in ('pyproject.toml', 'Pipfile')
+    def _gen_format(self):
+        for klass in self.formats:
+            if self._get_basename() in klass.basenames:
+                return klass()
+        return None
 
     def _get_basename(self):
         file_name = self.view.file_name()
@@ -121,42 +191,6 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
     def _is_on_text(self, hover_zone):
         return hover_zone == sublime.HOVER_TEXT
-
-    def _is_in_scope(self, point):
-        scope_name = self.view.scope_name(point)
-        names = ['entity.name.tag.toml']
-        return all(n in scope_name for n in names)
-
-    def _is_in_packages_table(self, point):
-        packages_table_res = (
-            # For `pyproject.toml` (Poerty).
-            r'\[tool\.poetry\.dependencies\]',
-            r'\[tool\.poetry\.dev-dependencies\]',
-            # For `Pipenv`.
-            r'^\[packages\]$',
-            r'^\[dev-packages\]$',
-        )
-        table_re = r'^\[.+\]$'
-        for package_table_re in packages_table_res:
-            package_table = self.view.find(package_table_re, 0)
-            if not package_table:
-                continue
-
-            region_begin = package_table.end()
-            next_table = self.view.find(table_re, region_begin)
-            if next_table:
-                region_end = next_table.begin()
-            else:
-                region_end = self.view.size()
-
-            if sublime.Region(region_begin, region_end).contains(point):
-                return True
-
-        return False
-
-    def _get_selected_pacakge_name(self, point):
-        package_name = self.view.substr(self.view.extract_scope(point))
-        return package_name.strip('"')
 
     def _fetch_package_info(self, name):
         return PackageDataManager().get_data(name)
