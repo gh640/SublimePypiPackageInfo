@@ -1,6 +1,6 @@
 # PypiPackageInfo
 
-A Sublime Text 3 package which provides a popup for Python PyPI packages in `requirements.txt`/`pyproject.toml`/`Pipfile`.
+A Sublime Text 3 package which provides a popup function for Python PyPI packages.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
 
