@@ -107,7 +107,7 @@ class TomlFormat(FileFormat):
 
     def _is_in_scope(self, view, point):
         scope_name = view.scope_name(point)
-        names = ['entity.name.tag.toml']
+        names = ('entity.name.tag.toml',)
         return all(n in scope_name for n in names)
 
     def _is_in_packages_table(self, view, point):
@@ -154,7 +154,7 @@ class RequirementsFormat(FileFormat):
 
     def _is_in_scope(self, view, point):
         scope_name = view.scope_name(point)
-        names = ['source.requirementstxt', 'string.package_name.requirementstxt']
+        names = ('source.requirementstxt', 'string.package_name.requirementstxt')
         return all(n in scope_name for n in names)
 
     def package_name(self, view, point):
@@ -172,11 +172,11 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
     formats = (TomlFormat, RequirementsFormat)
 
     def on_hover(self, point, hover_zone):
-        format_ = self._gen_format()
-        if not format_:
+        if not self._is_on_text(hover_zone):
             return
 
-        if not self._is_on_text(hover_zone):
+        format_ = self._determine_format()
+        if not format_:
             return
 
         if not format_.is_focused(self.view, point):
@@ -203,7 +203,7 @@ class PypiPackageInfoPackageInfo(sublime_plugin.ViewEventListener):
 
         mdpopups.hide_popup(self.view)
 
-    def _gen_format(self):
+    def _determine_format(self):
         for klass in self.formats:
             if klass.is_supported_file(self._get_basename()):
                 return klass()
@@ -294,14 +294,13 @@ class PackageCache:
 
     def __init__(self):
         self.conn = sqlite3.connect(self._get_path())
+        self.conn.row_factory = sqlite3.Row
         self._create_table_if_not_exists()
 
     def __del__(self):
-        if self.conn:
-            self.conn.close()
+        self.conn.close()
 
     def get_package_data(self, name):
-        self.conn.row_factory = sqlite3.Row
         cur = self.conn.cursor()
         cur.execute('SELECT * FROM packages WHERE name=?', (name,))
         row = cur.fetchone()
@@ -344,8 +343,7 @@ class PackageCache:
             cur.close()
 
     def clear_all_cache(self):
-        if self.conn:
-            self.conn.close()
+        self.conn.close()
         os.remove(self._get_path())
 
     def _get_path(self):
@@ -369,7 +367,7 @@ class PackageCache:
         except ValueError as e:
             print(
                 '`cache_max_count` must be an integer. '
-                'The value is set to "{}". '
+                'The value is set to "{!r}". '
                 'The default value {} is used instead.'.format(
                     max_count, CACHE_MAX_COUNT_DEFAULT
                 )
