@@ -1,6 +1,6 @@
 # PypiPackageInfo
 
-A Sublime Text 3 package which provides a popup function for Python PyPI packages.
+A Sublime Text 3 / 4 package which provides a popup function for Python PyPI packages.
 
 ![capture](https://raw.githubusercontent.com/gh640/SublimePypiPackageInfo/master/assets/capture.png)
 
